@@ -13,7 +13,14 @@
 *   + get_ascii_color(-1) should print out an error and quit the program
 *   + get_ascii_color(10) should print out an error and quit the program
 */
-char get_ascii_color(color_t c);
+char get_ascii_color(color_t c){
+    if (c<0 || c>9){
+        fprintf(stderr, "Wrong color!")
+        exit(EXIT_FAILURE);
+    }
+    return c+'0';
+}
+
 /*
 * The function prints a message depending on the state of the game. If the user
 * won the game (its score is greater than the goal score), it prints out "YOU WIN !".
