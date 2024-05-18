@@ -15,7 +15,7 @@
 */
 char get_ascii_color(color_t c){
     if (c<0 || c>9){
-        fprintf(stderr, "Wrong color!")
+        fprintf(stderr, "Wrong color!");
         exit(EXIT_FAILURE);
     }
     return c+'0';
@@ -29,7 +29,13 @@ char get_ascii_color(color_t c){
 * here you are asked to use the is_winning function. Its prototype is: 
 * bool is_winning(game_t *p_game);
 */
-void draw_ascii_awards(game_t *p_game);
+void draw_ascii_awards(game_t *p_game){
+    if (is_winning(p_game)){
+        printf("YOU WIN !\n");
+    } else {
+        printf("GAME OVER !\n");
+    }
+}
 /*
 * The function prints a message displaying the colors to come, the actual score 
 * and the goal score. 
@@ -40,7 +46,10 @@ void draw_ascii_awards(game_t *p_game);
 * 3 comes after it, and then 1),
 * 3 is the current score, and 30 is the goal score.
 */
-void draw_ascii_menu(game_t *p_game);
+void draw_ascii_menu(game_t *p_game){
+    printf("Next colors : %d %d %d\n", *((*p_game).next_colors), *((*p_game).next_colors+1), *((*p_game).next_colors+2));
+    printf("%d / %d\n", (*p_game).score, (*(*p_game).p_map).goal);
+}
 /*
 * The function draw_ascii_tiles prints the game map.
 * Each cell of the map is printed using three characters : a space, the color, and
@@ -60,14 +69,45 @@ void draw_ascii_menu(game_t *p_game);
 * To obtain the color of a cell, you can use the get_cell function. Its prototype is:
 * color_t get_cell(map_t *p_map, position_t *p_position);
 */
-void draw_ascii_tiles(map_t *p_map, position_t *p_actual_pos);
+void draw_ascii_tiles(map_t *p_map, position_t *p_actual_pos){
+    for (int i=0; i<(*p_map).nb_lines; i++){
+        for (int j=0;  j<(*p_map).nb_columns; j++){
+            position_t p;
+            p.x = i;
+            p.y = j;
+            color_t c = get_cell(p_map, &p);
+            if (c==EMPTY_CELL){
+                if ((*p_actual_pos).x == p.x && (*p_actual_pos).y == p.y){
+                    printf(" X!");
+                } else {
+                    printf(" X ");
+                }
+            }
+            else if (c==BORDER_CELL){
+                continue;
+            }
+            else {
+                if ((*p_actual_pos).x == p.x && (*p_actual_pos).y == p.y){
+                    printf(" %d!", c);
+                } else {
+                    printf(" %d ",c);
+                }
+            }
+
+        }
+        printf("\n");
+    }
+}
 
 /*
 * The update_ascii_display function only prints all the graphical elements of the game.
 * That is the map and the menu (colors to come, the current score and the goal score).
 * It should not imply duplicate code.
 */
-void update_ascii_display(game_t *p_game);
+void update_ascii_display(game_t *p_game){
+    draw_ascii_menu(p_game);
+    draw_ascii_tiles((*p_game).p_map, (*p_game).p_actual_position);
+}
 
 int main(void){
     position_t p;
